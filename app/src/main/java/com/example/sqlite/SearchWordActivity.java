@@ -1,10 +1,12 @@
 package com.example.sqlite;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,6 +25,7 @@ public class SearchWordActivity extends AppCompatActivity implements View.OnClic
     private Button btnSearch;
     private ListView lstSearch;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +36,7 @@ public class SearchWordActivity extends AppCompatActivity implements View.OnClic
         lstSearch = findViewById(R.id.lstSearch);
 
         btnSearch.setOnClickListener(this);
+
     }
 
     @Override
@@ -50,7 +54,7 @@ public class SearchWordActivity extends AppCompatActivity implements View.OnClic
         List <Word> wordList = new ArrayList<>();
         wordList = myHelper.GetAlWords(sqlLiteDatabase);
 
-        HashMap<String, String> hashMap = new HashMap<>();
+        final HashMap<String, String> hashMap = new HashMap<>();
         for (int i =0; i<wordList.size(); i++){
             hashMap.put(wordList.get(i).getWord(), wordList.get(i).getMeaning());
         }
@@ -60,5 +64,17 @@ public class SearchWordActivity extends AppCompatActivity implements View.OnClic
                 new ArrayList<String>(hashMap.keySet())
         );
         lstSearch.setAdapter(stringArrayAdapter);
+
+        lstSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                String key = parent.getItemAtPosition(position).toString();
+                String meaning = hashMap.get(key);
+                Intent intent = new Intent(SearchWordActivity.this,ViewWords.class);
+                intent.putExtra("Meaning",meaning);
+                startActivity(intent);
+            }
+        });
     }
 }
