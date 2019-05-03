@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         btnAddWord.setOnClickListener(this);
 
+
     }
 
     @Override
